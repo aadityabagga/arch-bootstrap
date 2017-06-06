@@ -23,13 +23,17 @@ set -e -u -o pipefail
 # Packages needed by pacman (see get-pacman-dependencies.sh)
 PACMAN_PACKAGES=(
   acl archlinux-keyring attr bzip2 curl expat glibc gpgme libarchive
-  libassuan libgpg-error libnghttp2 libssh2 lzo openssl pacman pacman-mirrorlist xz zlib
+  libassuan libgpg-error libnghttp2 libssh2 lzo openssl pacman pacman-mirrors xz zlib
   krb5 e2fsprogs keyutils libidn gcc-libs lz4 libpsl icu
 )
 BASIC_PACKAGES=(${PACMAN_PACKAGES[*]} filesystem)
-EXTRA_PACKAGES=(coreutils bash grep gawk file tar systemd sed)
-DEFAULT_REPO_URL="http://mirrors.kernel.org/archlinux"
+EXTRA_PACKAGES=(coreutils bash grep gawk file tar sed)
+DEFAULT_REPO_URL="http://repo.manjaro.org.uk"
 DEFAULT_ARM_REPO_URL="http://mirror.archlinuxarm.org"
+DEFAULT_BRANCH="unstable"
+
+# Read from config file is present to override variables
+[ -f config.sh ] && . config.sh
 
 stderr() { 
   echo "$@" >&2 
@@ -87,7 +91,7 @@ get_core_repo_url() {
   if [[ "$ARCH" == arm* ]]; then
     echo "${REPO_URL%/}/$ARCH/core"
   else
-    echo "${REPO_URL%/}/core/os/$ARCH"
+    echo "${REPO_URL%/}/${DEFAULT_BRANCH}/core/$ARCH"
   fi
 }
 
@@ -96,7 +100,7 @@ get_template_repo_url() {
   if [[ "$ARCH" == arm* ]]; then
     echo "${REPO_URL%/}/$ARCH"
   else
-    echo "${REPO_URL%/}/\$repo/os/$ARCH"
+    echo "${REPO_URL%/}/${DEFAULT_BRANCH}/\$repo/$ARCH"
   fi
 }
 
@@ -215,5 +219,8 @@ main() {
   debug "  # mount -t sysfs sys $DEST/sys/"
   debug "  # mount -o bind /dev $DEST/dev/"
 }
+
+# Read from file is present to override functions
+[ -f functions_override.sh ] && . functions_override.sh
 
 main "$@"
