@@ -27,7 +27,7 @@ PACMAN_PACKAGES=(
   krb5 e2fsprogs keyutils libidn gcc-libs lz4 libpsl icu
 )
 BASIC_PACKAGES=(${PACMAN_PACKAGES[*]} filesystem)
-EXTRA_PACKAGES=(coreutils bash grep gawk file tar sed util-linux)
+EXTRA_PACKAGES=(coreutils bash grep gawk file tar sed)
 DEFAULT_REPO_URL="http://repo.manjaro.org.uk"
 DEFAULT_ARM_REPO_URL="http://mirror.archlinuxarm.org"
 DEFAULT_BRANCH="unstable"
